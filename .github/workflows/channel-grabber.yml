@@ -20,27 +20,33 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install python-telegram-bot
+          pip install telethon
 
       - name: List messages
         run: |
+          from telethon import TelegramClient, events
           import os
-          import telegram
 
-          bot = telegram.Bot(token='YOUR_BOT_TOKEN')
-          updates = bot.get_updates()
-          messages = []
+          API_ID = '26963557'
+          API_HASH = '70aed19a29d2321933d9c4f652534c0f'
+          CHANNEL_NAME = '@Tak_Mesra'
 
-          for update in updates:
-              if update.channel_post.chat.title == 'YOUR_CHANNEL_NAME':
-                  messages.append(update.channel_post.text)
+          client = TelegramClient('session', API_ID, API_HASH)
 
-          if not os.path.exists('Posts'):
-              os.makedirs('Posts')
+          async def main():
+              messages = []
+              async for message in client.iter_messages(CHANNEL_NAME):
+                  messages.append(message.text)
 
-          for i, message in enumerate(messages):
-              with open(f'Posts/{i+1}.txt', 'w') as f:
-                  f.write(message)
+              if not os.path.exists('Posts'):
+                  os.makedirs('Posts')
+
+              for i, message in enumerate(messages):
+                  with open(f'Posts/{i+1}.txt', 'w') as f:
+                      f.write(message)
+
+          with client:
+              client.loop.run_until_complete(main())
 
       - name: Commit changes
         run: |
