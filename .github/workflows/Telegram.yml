@@ -24,9 +24,9 @@ jobs:
 
       - name: Run backup script
         env:
-          TELEGRAM_API_ID: ${{ secrets.26963557 }}
-          TELEGRAM_API_HASH: ${{ secrets.70aed19a29d2321933d9c4f652534c0f }}
-          TELEGRAM_CHANNEL_NAME: ${{ secrets.@memedwsh }}
+          TELEGRAM_API_ID: ${{ secrets.TELEGRAM_API_ID }}
+          TELEGRAM_API_HASH: ${{ secrets.TELEGRAM_API_HASH }}
+          TELEGRAM_CHANNEL_NAME: ${{ secrets.memedwsh }}
         run: |
           import telegram
           from telegram import Update, Bot
