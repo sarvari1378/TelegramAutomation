@@ -1,0 +1,59 @@
+name: Telegram Channel Backup
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install python-telegram-bot
+
+      - name: Run backup script
+        env:
+          TELEGRAM_API_ID: ${{ secrets.26963557 }}
+          TELEGRAM_API_HASH: ${{ secrets.70aed19a29d2321933d9c4f652534c0f }}
+          TELEGRAM_CHANNEL_NAME: ${{ secrets.@memedwsh }}
+        run: |
+          import telegram
+          from telegram import Update, Bot
+          from telegram.ext import Updater, CommandHandler, CallbackContext
+
+          def backup(update: Update, context: CallbackContext) -> None:
+              bot = context.bot
+              channel_name = context.args[0]
+              channel = bot.get_chat(channel_name)
+              messages = channel.get_messages()
+              with open('channel_backup.txt', 'w') as f:
+                  for message in messages:
+                      f.write(message.text + '\n---------------------\n')
+
+          updater = Updater(token=TELEGRAM_API_TOKEN)
+          dispatcher = updater.dispatcher
+
+          dispatcher.add_handler(CommandHandler('backup', backup))
+
+          updater.start_polling()
+          updater.idle()
+
+      - name: Commit and push changes
+        run: |
+          git config --global user.name 'GitHub Actions'
+          git config --global user.email 'actions@github.com'
+          git add channel_backup.txt
+          git commit -m 'Update channel backup'
+          git push
+
