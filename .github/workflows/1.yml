@@ -32,8 +32,8 @@ jobs:
           api_hash = '70aed19a29d2321933d9c4f652534c0f'
           bot_token = '5978875502:AAFHqLOAQahaMklBX7n9K3GUk7YCKIm2sF0'
 
-          with TelegramClient('anon', api_id, api_hash) as client:
-              for message in client.iter_messages('CloudCityy', limit=50):
+          with TelegramClient(bot_token, api_id, api_hash) as client:
+              for message in client.iter_messages('YOUR_CHANNEL_ID', limit=50):
                   with open('messages.txt', 'a') as f:
                       f.write(message.text)
                       f.write('\n-------------\n')
