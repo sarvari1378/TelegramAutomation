@@ -21,7 +21,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install pyrogram
+          pip install pyrogram TgCrypto
 
       - name: Fetch messages
         run: |
@@ -35,9 +35,9 @@ jobs:
           app = Client('my_account', api_id=api_id, api_hash=api_hash, bot_token=bot_token)
 
           with app:
-              messages = app.get_chat_history('YOUR_CHANNEL_ID', limit=50)
+              messages = list(app.get_chat_history('YOUR_CHANNEL_ID', limit=50))
               with open('messages.txt', 'a') as f:
-                  for message in messages['messages']:
+                  for message in messages:
                       f.write(message.text)
                       f.write('\n-------------\n')
           "
