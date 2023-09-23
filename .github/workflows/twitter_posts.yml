@@ -1,13 +1,13 @@
-name: Fetch Twitter Posts and Save to Main Branch
+name: Extract Text from HTML
 
 on:
   push:
     branches:
-      - main
+      - main  # Change to the branch you want to trigger the workflow on
 
 jobs:
-  fetch-and-save-tweets:
-    runs-on: ubuntu-latest
+  extract_text:
+    runs-on: ubuntu-latest  # You can choose another OS if needed
 
     steps:
       - name: Checkout code
@@ -16,18 +16,13 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: 3.x
+          python-version: 3.1  # Replace with your desired Python version
 
       - name: Install dependencies
-        run: pip install tweepy
+        run: pip install beautifulsoup4 requests
 
-      - name: Run Python script
-        run: python twitter_posts.py
-
-      - name: Commit and push changes
+      - name: Extract Text
         run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add tweets.txt
-          git commit -m "Add Twitter posts"
-          git push
+          python extract_text.py  # Replace with the actual filename of your script
+        env:
+          URL: https://x.com/gheermez/status/1701264618427961709?s=20  # Replace with the URL you want to extract text from
