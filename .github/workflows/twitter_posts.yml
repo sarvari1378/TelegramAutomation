@@ -16,7 +16,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: 3.1  # Replace with your desired Python version
+          python-version: 3  # Replace with your desired Python version
 
       - name: Install dependencies
         run: pip install beautifulsoup4 requests
