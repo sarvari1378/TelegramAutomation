@@ -1,0 +1,33 @@
+name: Fetch Twitter Posts and Save to Main Branch
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  fetch-and-save-tweets:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.x
+
+      - name: Install dependencies
+        run: pip install tweepy
+
+      - name: Run Python script
+        run: python twitter_posts.py
+
+      - name: Commit and push changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add tweets.txt
+          git commit -m "Add Twitter posts"
+          git push
