@@ -10,7 +10,7 @@ access_token = '1410887318186205184-AUd3bSYzMFr8TBmlKkPzpBDd2BBgnL'
 access_token_secret = 'MtVXWQ0h1IROS71LbD95OXXkKXFoR6dHSkEZlvZWY1WdR'
 
 # Twitter user ID
-user_id = 'TARGET_USER_ID'
+user_id = '@iSegaro'
 
 # Initialize Tweepy
 auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
