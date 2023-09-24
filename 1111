@@ -136,7 +136,7 @@
                     "enabled": true,
                     "fingerprint": "firefox"
                 },
-                "SECURITY": {
+                "reality": {
                     "enabled": true,
                     "public_key": "k6cQlxD8Pnl47E-GWBi-iJF7lyUpW-uKel5-64IASzs",
                     "short_id": "9db60c66"
