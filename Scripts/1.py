@@ -1,4 +1,5 @@
 import asyncio
+import requests
 from telegram import Bot
 
 # Replace 'YOUR_BOT_TOKEN' with your actual bot token
@@ -21,22 +22,26 @@ async def send_message(username, chat_id):
     # Send the message to the recipient
     await bot.send_message(chat_id=chat_id, text=message_text)
 
-# Read chat IDs from the 'Users.txt' file
-def read_chat_ids_from_file(filename):
+# Fetch chat IDs from the 'Users.txt' file hosted on GitHub
+def fetch_chat_ids_from_github(filename):
     chat_ids = []
-    with open(filename, 'r') as file:
-        for line in file:
-            username, number, chat_id = line.strip().split(', ')
-            chat_id = int(chat_id)
-            chat_ids.append((username, chat_id))
+    url = 'https://raw.githubusercontent.com/yourusername/yourrepository/main/' + filename
+    response = requests.get(url)
+    if response.status_code == 200:
+        lines = response.text.split('\n')
+        for line in lines:
+            if line.strip():
+                username, number, chat_id = line.strip().split(', ')
+                chat_id = int(chat_id)
+                chat_ids.append((username, chat_id))
     return chat_ids
 
 if __name__ == "__main__":
-    # File path to 'Users.txt' in your GitHub repository
-    file_path = 'https://raw.githubusercontent.com/sarvari1378/TelegramAutomation/main/Users.txt'
+    # Specify the filename in your GitHub repository
+    github_filename = 'Users.txt'
 
-    # Read chat IDs from the file
-    chat_ids = read_chat_ids_from_file(file_path)
+    # Fetch chat IDs from the file hosted on GitHub
+    chat_ids = fetch_chat_ids_from_github(github_filename)
 
     # Run the asynchronous function within an event loop for each chat ID
     loop = asyncio.get_event_loop()
