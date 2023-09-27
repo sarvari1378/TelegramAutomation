@@ -1,0 +1,28 @@
+name: Send Telegram Message
+
+on:
+  push:
+    branches:
+      - main
+      
+jobs:
+  send_message:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'  # Specify the Python version you want to use
+
+    - name: Install dependencies
+      run: |
+        pip install python-telegram-bot
+
+    - name: Run Python script
+      run: python Scripts/1.py  # Replace with the path to your Python script
+      env:
+        YOUR_BOT_TOKEN: ${{ secrets.BOT_TOKEN }}  # Set your bot token as a secret in your repository
