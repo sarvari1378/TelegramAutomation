@@ -20,10 +20,10 @@ jobs:
 
     - name: Install dependencies
       run: |
-        pip install python-telegram-bot
+        pip install telethon
         pip install requests
 
     - name: Run Python script
-      run: python Scripts/1.py  # Replace with the path to your Python script
+      run: python 2.py  # Replace with the path to your Python script
       env:
         YOUR_BOT_TOKEN: ${{ secrets.BOT_TOKEN }}  # Set your bot token as a secret in your repository
