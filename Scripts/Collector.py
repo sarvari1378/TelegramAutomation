@@ -37,7 +37,7 @@ async def main():
                 hour_minute = tehran_time.strftime('%H:%M')
 
                 # Replace all characters after '#' with '|Channel_Username|$Hour|X|'
-                modified_link = re.sub('#.*', f'|{hour_minute}|{i+1}|', link)
+                modified_link = re.sub('#.*', f'#|{hour_minute}|{i+1}|', link)
                 f.write(f'{modified_link}\n')
 
 client.loop.run_until_complete(main())
