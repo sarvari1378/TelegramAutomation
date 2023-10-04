@@ -1,61 +1,70 @@
-name: Telegram Channel Messages
+name: Telegram VLess Link Fetcher
 
-on:
-  push:
-    branches:
-      - main
+on: 
+  workflow_dispatch:
 
 jobs:
-  fetch-messages:
+  build:
+
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.8
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
 
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install telethon
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install telethon
 
-      - name: Fetch messages
-        run: |
-          python -c "
-          from telethon.sync import TelegramClient
-          from telethon.tl.functions.messages import GetHistoryRequest
-          import json
+    - name: Run script
+      run: |
+        python -c "
+        from telethon.sync import TelegramClient
+        from telethon.tl.functions.messages import GetHistoryRequest
+        import re
 
-          api_id = '26963557'
-          api_hash = '70aed19a29d2321933d9c4f652534c0f'
-          bot_token = '5978875502:AAFHqLOAQahaMklBX7n9K3GUk7YCKIm2sF0'
-          channel_id = '@V2rayCollectorDonate'
+        api_id = '26963557'
+        api_hash = '70aed19a29d2321933d9c4f652534c0f'
+        session = 'anon.session'
+        channel_username = '@V2rayCollectorDonate'
 
-          client = TelegramClient('anon', api_id, api_hash).start(bot_token=bot_token)
+        client = TelegramClient(session, api_id, api_hash)
 
-          result = client(GetHistoryRequest(
-              peer=channel_id,
-              limit=20,
-              offset_date=None,
-              offset_id=0,
-              max_id=0,
-              min_id=0,
-              add_offset=0,
-              hash=0))
+        async def main():
+            async with client:
+                channel_entity = await client.get_entity(channel_username)
+                posts = await client(GetHistoryRequest(
+                    peer=channel_entity,
+                    limit=20,
+                    offset_date=None,
+                    offset_id=0,
+                    max_id=0,
+                    min_id=0,
+                    add_offset=0,
+                    hash=0))
 
-          with open('messages.txt', 'w') as f:
-              for message in result.messages:
-                  f.write(json.dumps(message.to_dict(), indent=4))
-                  f.write('\n')
-          "
+                vless_links = []
+                for message in posts.messages:
+                    links = re.findall('vless://[^\s]+', message.message)
+                    vless_links.extend(links)
 
-      - name: Commit and push
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add messages.txt
-          git commit -m "Add latest messages" && git push
+                with open(f'{channel_username}.txt', 'w') as f:
+                    for link in vless_links:
+                        f.write(f'{link}\n')
+
+        client.loop.run_until_complete(main())
+        "
+
+    - name: Commit and push
+      run: |
+        git config --local user.email "Your GitHub email"
+        git config --local user.name "Your GitHub username"
+        git add -A
+        git commit -m "Add vless links"
+        git push
