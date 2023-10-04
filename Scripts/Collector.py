@@ -7,7 +7,7 @@ import pytz
 api_id = '26963557'
 api_hash = '70aed19a29d2321933d9c4f652534c0f'
 session = 'anon.session'
-channel_usernames = ['@V2rayCollectorDonate', '@VPNCUSTOMIZE']  # Add your channels here
+channel_usernames = ['@V2rayCollectorDonate']  # Add your channels here
 
 client = TelegramClient(session, api_id, api_hash)
 
@@ -16,24 +16,33 @@ async def main():
         all_links = []
         for channel_username in channel_usernames:
             channel_entity = await client.get_entity(channel_username)
-            posts = await client(GetHistoryRequest(
-                peer=channel_entity,
-                limit=20,
-                offset_date=None,
-                offset_id=0,
-                max_id=0,
-                min_id=0,
-                add_offset=0,
-                hash=0))
+            offset_id = 0
+            vless_trojan_links = []
+            while len(vless_trojan_links) < 20:
+                posts = await client(GetHistoryRequest(
+                    peer=channel_entity,
+                    limit=100,  # Get more messages per request
+                    offset_date=None,
+                    offset_id=offset_id,
+                    max_id=0,
+                    min_id=0,
+                    add_offset=0,
+                    hash=0))
 
-            vless_links = []
-            for message in posts.messages:
-                links = re.findall('vless://[^\s]+', message.message)
-                vless_links.extend(links)
-                all_links.extend(links)
+                for message in posts.messages:
+                    links = re.findall('vless://[^\s]+|trojan://[^\s]+', message.message)
+                    vless_trojan_links.extend(links)
+                    all_links.extend(links)
+                    if len(vless_trojan_links) >= 20:
+                        break
+
+                if not posts.messages:
+                    break  # No more messages left
+
+                offset_id = posts.messages[-1].id
 
             with open(f'{channel_username}.txt', 'w') as f:
-                for i, link in enumerate(vless_links):
+                for i, link in enumerate(vless_trojan_links[:20]):  # Only write the first 20 links
                     # Get current time in Iran/Tehran
                     tehran_tz = pytz.timezone('Asia/Tehran')
                     tehran_time = datetime.now(tehran_tz)
@@ -44,7 +53,7 @@ async def main():
                     f.write(f'{modified_link}\n')
 
         with open('merged.txt', 'w') as f:
-            for i, link in enumerate(all_links):
+            for i, link in enumerate(all_links[:20]):  # Only write the first 20 links
                 # Get current time in Iran/Tehran
                 tehran_tz = pytz.timezone('Asia/Tehran')
                 tehran_time = datetime.now(tehran_tz)
