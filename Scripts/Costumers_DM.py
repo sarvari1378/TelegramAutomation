@@ -33,7 +33,7 @@ with open(user_data_file, 'r') as f:
 for user in users:
     name, date, username = user
     if date == 5:
-        message = "سلام عرض ادب و احترام. مشکلی هست در سیستم؟ بنده درخدمتم اگر مشکلی هست بفرمایید"
+        message = "سلام عرض ادب و احترام. بنده درخدمتم اگر مشکلی در سیستم هست بفرمایید"
     elif date == 2:
         message = "سلام عرض ادب و احترام اشتراک شما رو به پایان است آیا قصد تمدید دارید؟"
     else:
