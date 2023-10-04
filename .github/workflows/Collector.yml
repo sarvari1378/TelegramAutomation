@@ -1,7 +1,10 @@
 name: Telegram VLess Link Fetcher
 
 on: 
-  workflow_dispatch:
+  push:
+    branches: [ main ]
+  schedule:
+    - cron:  '0 * * * *'
 
 jobs:
   build:
