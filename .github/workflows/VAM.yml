@@ -1,7 +1,9 @@
 name: VAM
 
 on: 
-  [push]
+  schedule:
+    - cron:  '33 2 * * *'
+
 
 jobs:
   build:
