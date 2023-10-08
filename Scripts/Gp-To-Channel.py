@@ -31,7 +31,7 @@ async def main():
             break
 
     # Forward the message to the channel
-    forwarded_message = f"{message.text}\n\nChannel ID: {channel_username}"
+    forwarded_message = f"{message.text}\n\n🆔: {channel_username}"
     if message.media:
         await client.send_message(channel_username, forwarded_message, file=message.media)
     else:
