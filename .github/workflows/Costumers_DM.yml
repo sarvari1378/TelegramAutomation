@@ -23,6 +23,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install telethon
         pip install pytz
+        pip install requests
 
     - name: Run script
       run: python Scripts/Costumers_DM.py
