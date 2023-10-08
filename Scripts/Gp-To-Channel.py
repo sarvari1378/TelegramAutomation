@@ -9,7 +9,7 @@ session_file = 'anon.session'
 
 # Group link and channel username
 group_link = 'https://t.me/+q2xxl_QmJfxjN2Nk'
-channel_username = '@sujed_sugest'
+channel_username = '@sajed_sugests'
 
 async def main():
     # Create a Telethon client using the session file
