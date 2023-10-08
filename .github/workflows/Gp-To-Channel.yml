@@ -1,4 +1,4 @@
-name: Auto Messageing to Customers
+name: Gp-To-Channel
 
 on: 
   schedule:
