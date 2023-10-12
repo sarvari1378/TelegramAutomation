@@ -1,4 +1,7 @@
 from telethon.sync import TelegramClient, events
+from datetime import datetime, timedelta
+import pytz
+import asyncio
 
 # Your API credentials
 api_id = '26963557'
@@ -26,19 +29,31 @@ async def main():
         return
 
     # Find the oldest message in the group
-    async for message in client.iter_messages(entity, reverse=True):
-        if message.text or message.media:
+    message = None
+    async for msg in client.iter_messages(entity, reverse=True):
+        if msg.text or msg.media:
+            message = msg
             break
 
-    # Forward the message to the channel
-    forwarded_message = f"{message.text}\n\n🆔: {channel_username}"
-    if message.media:
-        await client.send_message(channel_username, forwarded_message, file=message.media)
-    else:
-        await client.send_message(channel_username, forwarded_message)
+    # Get current time in Iran
+    tz_iran = pytz.timezone('Asia/Tehran')
+    now_iran = datetime.now(tz_iran)
+    
+    # Calculate how long to wait until the next half-hour mark
+    minutes_to_wait = 30 - now_iran.minute % 30
+    if minutes_to_wait < 30:
+        await asyncio.sleep(minutes_to_wait * 60)  # Convert minutes to seconds
 
-    # Delete the message from the group
-    await client.delete_messages(entity, message)
+    # If a message exists, forward it to the channel and delete it from the group
+    if message is not None:
+        forwarded_message = f"{message.text}\n\n🆔: {channel_username}"
+        if message.media:
+            await client.send_message(channel_username, forwarded_message, file=message.media)
+        else:
+            await client.send_message(channel_username, forwarded_message)
+
+        # Delete the message from the group
+        await client.delete_messages(entity, message)
 
     # Disconnect
     await client.disconnect()
