@@ -7,7 +7,7 @@ import pytz
 api_id = '26963557'
 api_hash = '70aed19a29d2321933d9c4f652534c0f'
 session = 'anon.session'
-channel_usernames = ['@V2rayCollectorDonate','@VPNCUSTOMIZE']  # Add your channels here
+channel_usernames = ['@V2rayCollectorDonate','@VPNCUSTOMIZE','@reality_daily']  # Add your channels here
 
 client = TelegramClient(session, api_id, api_hash)
 
